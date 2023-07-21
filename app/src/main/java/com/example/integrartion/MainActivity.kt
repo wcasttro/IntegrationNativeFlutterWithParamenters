@@ -36,7 +36,12 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.fab.setOnClickListener { view ->
-
+            startActivity(
+                FlutterActivity
+                    .withNewEngine()
+                    .initialRoute("ScreenTeste?parm1=um&parm2=dois")
+                    .build(this)
+            )
 
         }
     }
