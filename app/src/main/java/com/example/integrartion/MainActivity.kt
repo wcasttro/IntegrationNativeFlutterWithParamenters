@@ -33,8 +33,6 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-
-
         binding.fab.setOnClickListener { view ->
             startActivity(
                 FlutterActivity
@@ -42,7 +40,6 @@ class MainActivity : AppCompatActivity() {
                     .initialRoute("ScreenTeste?parm1=um&parm2=dois")
                     .build(this)
             )
-
         }
     }
 
