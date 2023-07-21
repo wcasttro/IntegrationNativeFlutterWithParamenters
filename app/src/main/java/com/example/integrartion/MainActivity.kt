@@ -33,7 +33,28 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+        //        // Instantiate a FlutterEngine.
+//        flutterEngine =  FlutterEngine(this);
+//
+//        // Start executing Dart code to pre-warm the FlutterEngine.
+//        flutterEngine.getDartExecutor().executeDartEntrypoint(
+//            DartExecutor.DartEntrypoint.createDefault()
+//        );
+//
+//        // Cache the FlutterEngine to be used by FlutterActivity.
+//        FlutterEngineCache
+//            .getInstance()
+//            .put("my_engine_id", flutterEngine);
+
+//        val intent = FlutterActivity
+//            .withNewEngine()
+//            .initialRoute("Android 中启动 FlutterActivity")
+//            .build(this@MainActivity)
+//        intent.putExtra("initParams", "Android 中启动 FlutterActivity2")
+
         binding.fab.setOnClickListener { view ->
+            // startActivity(intent)
+
             startActivity(
                 FlutterActivity
                     .withNewEngine()
