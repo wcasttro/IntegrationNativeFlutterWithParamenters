@@ -12,13 +12,17 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.integrartion.databinding.ActivityMainBinding
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.embedding.engine.dart.DartExecutor
+import io.flutter.plugin.common.MethodChannel
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(){
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     lateinit var flutterEngine : FlutterEngine
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -32,6 +36,29 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+       flutterEngine =  FlutterEngine(this);
+
+
+        flutterEngine.dartExecutor.executeDartEntrypoint(
+            DartExecutor.DartEntrypoint.createDefault()
+        )
+
+        val calculatorChannel =  MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "samples.flutter.dev/background")
+
+        calculatorChannel.invokeMethod("executeBackgroundCode", null)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "samples.flutter.dev/background")
+            .invokeMethod("executeBackgroundCode", null)
+
+        calculatorChannel.setMethodCallHandler { call, result ->
+            when (call.method) {
+                "executeBackgroundCode" -> {
+                    var value = call.arguments as String
+                    print(value);                    //result.success(value)
+                }
+                else -> result.notImplemented()
+            }
+        }
 
         //        // Instantiate a FlutterEngine.
 //        flutterEngine =  FlutterEngine(this);
@@ -58,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(
                 FlutterActivity
                     .withNewEngine()
-                    .initialRoute("ScreenTeste?parm1=um&parm2=dois")
+                    .initialRoute("/ScreenTeste")
                     .build(this)
             )
         }
