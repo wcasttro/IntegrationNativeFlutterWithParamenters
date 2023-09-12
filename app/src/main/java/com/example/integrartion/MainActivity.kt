@@ -12,6 +12,9 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.integrartion.databinding.ActivityMainBinding
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.embedding.engine.FlutterEngineCache
+import io.flutter.embedding.engine.dart.DartExecutor
+import io.flutter.plugin.common.MethodChannel
 
 
 class MainActivity : AppCompatActivity() {
@@ -52,15 +55,49 @@ class MainActivity : AppCompatActivity() {
 //            .build(this@MainActivity)
 //        intent.putExtra("initParams", "Android 中启动 FlutterActivity2")
 
+// Instantiate a FlutterEngine.
+        flutterEngine =  FlutterEngine(this);
+        // Configure an initial route.
+        val channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "channel_name")
+        channel.invokeMethod("sendParamsToFlutter", "valor a ser passado");
+
+        //flutterEngine.getNavigationChannel().setInitialRoute("/homePage");
+        // Start executing Dart code to pre-warm the FlutterEngine.
+        flutterEngine.getDartExecutor().executeDartEntrypoint(
+            DartExecutor.DartEntrypoint.createDefault()
+        );
+        // Cache the FlutterEngine to be used by FlutterActivity or FlutterFragment.
+        FlutterEngineCache
+            .getInstance()
+            .put("my_engine_id", flutterEngine);
+
+
+        // Define a rota nomeada do Flutter para ser aberta
+
+        // Define a rota nomeada do Flutter para ser aberta
+//        val intent = FlutterActivity
+//            .withNewEngine()
+//            .initialRoute("/homePage?teste1=teste")
+//            .build(this)
+//        intent.putExtra("initParams", "teste")
+
         binding.fab.setOnClickListener { view ->
-            // startActivity(intent)
+
 
             startActivity(
                 FlutterActivity
-                    .withNewEngine()
-                    .initialRoute("ScreenTeste?parm1=um&parm2=dois")
+                    .withCachedEngine("my_engine_id")
                     .build(this)
-            )
+            );
+
+         //   startActivity(intent)
+
+//            startActivity(
+//                FlutterActivity
+//                    .withNewEngine()
+//                    .initialRoute("ScreenTeste?parm1=um&parm2=dois")
+//                    .build(this)
+//            )
         }
     }
 

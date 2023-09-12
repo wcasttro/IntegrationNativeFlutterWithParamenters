@@ -12,17 +12,35 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+        '/homePage': (context) {
+          var args = ModalRoute.of(context)?.settings.arguments;
+          if (args != null) {
+            args = args as Map;
+          }
+
+          return MyHomePage(
+            title: '',
+          );
+        }
+      },
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: chooseWidget(window.defaultRouteName, context),
+    //  home: chooseWidget(View.of(context).platformDispatcher.defaultRouteName, context),
+       home: ScreenTeste(),
     );
   }
 
   Widget chooseWidget(String route, context) {
     final route_sem_parametro = route.split('?').first;
     // final args = ModalRoute.of(context)?.settings.arguments as Map;
+    var args = ModalRoute.of(context)?.settings.arguments;
+    if (args != null) {
+      args = args as Map;
+    }
+    print(args);
 
     switch (route_sem_parametro) {
       // name of the route defined in the host app
