@@ -17,11 +17,13 @@ import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.plugin.common.MethodChannel
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(){
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     lateinit var flutterEngine : FlutterEngine
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -35,6 +37,29 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+       flutterEngine =  FlutterEngine(this);
+
+
+        flutterEngine.dartExecutor.executeDartEntrypoint(
+            DartExecutor.DartEntrypoint.createDefault()
+        )
+
+        val calculatorChannel =  MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "samples.flutter.dev/background")
+
+        calculatorChannel.invokeMethod("executeBackgroundCode", null)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "samples.flutter.dev/background")
+            .invokeMethod("executeBackgroundCode", null)
+
+        calculatorChannel.setMethodCallHandler { call, result ->
+            when (call.method) {
+                "executeBackgroundCode" -> {
+                    var value = call.arguments as String
+                    print(value);                    //result.success(value)
+                }
+                else -> result.notImplemented()
+            }
+        }
 
         //        // Instantiate a FlutterEngine.
 //        flutterEngine =  FlutterEngine(this);
